@@ -62,9 +62,11 @@ public abstract class Property<T> extends ObservableValue<T> {
     }
 
     public final void disconnect() {
-        incoming.removeListener(invalidationListener);
-        incoming = null;
-        //no need to invalidate, cache stays same
+        if(incoming != null){
+            incoming.removeListener(invalidationListener);
+            incoming = null;
+            //no need to invalidate, cache stays same
+        }
     }
 
     public void set(T newValue) {

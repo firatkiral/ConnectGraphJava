@@ -2,7 +2,7 @@ package net.kiral.nodegraph;
 
 import java.util.Objects;
 
-public abstract class Property<T> extends ObservableValue<T> {
+public class Property<T> extends ObservableValue<T> {
 
     private ObservableValue<T> incoming;
     private InvalidationListener cacheDirtyListener;

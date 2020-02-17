@@ -1,6 +1,6 @@
 <component name="ArtifactManager">
   <artifact type="jar" name="NodeGraph:jar">
-    <output-path>$PROJECT_DIR$/out/artifacts/NodeGraph_jar</output-path>
+    <output-path>$PROJECT_DIR$/release</output-path>
     <root id="archive" name="NodeGraph.jar">
       <element id="module-output" name="NodeGraph" />
     </root>

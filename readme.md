@@ -37,7 +37,7 @@ public class Vector3 {
 ```
 
 And our application does some vec3 math calculations such as multiply. Lets take a
-look at our multiply node example:
+look at our multiply node example.
 ```java
 public class VectorMultiplyNode extends Node<Vector3> {
     Input<Vector3> firstInput = new Input<>(new Vector3());
@@ -77,7 +77,7 @@ Input<Float> thirdInput = new Input<>(0f);
 ```
 
 These are the node's input properties that we want node always to keep track of if these properties are changed. To do that
-we have to tell node that these are the properties needs to be tracked by adding this lines to constructor:
+we have to tell node that these are the properties needs to be tracked by adding this lines to constructor.
 ```java
 VectorMultiplyNode(){
     addInput(firstInput, secondInput, thirdInput);
@@ -102,19 +102,18 @@ protected Vector3 computeValue() {
 Lets continue with main method and start using graph by creating a multiply node.
 ```java
 public static void main(String[] args) {
-    VectorMultiplyNode vNode = new VectorMultiplyNode();
+    VectorMultiplyNode multiplyNode = new VectorMultiplyNode();
 }
 ```
 
 Lets call get() function to see what happens. All nodes are invalidated when they are created. 
-That means when we call get() soon after it is created it will calculate first output and cache it.
-Calling get() method will make the node valid and wont calculate for next calls, 
-only return cached value for new get() calls.
+That means when we call get() soon after it is created, it will calculate first output and cache it.
+Calling get() method will make the node valid and only return cached value for new get() calls.
 ```java
-Vector3 out = vNode.get();
+Vector3 out = multiplyNode.get();
 ```
 
-Lets see what we got here. This will print "Vector3{x=0.0, y=0.0, z=0.0}"
+Lets see what we got here. This will print "Vector3{x=0.0, y=0.0, z=0.0}".
 ```java
 System.out.println(out);
 ```
@@ -126,36 +125,37 @@ Vector3 v2 = new Vector3(2,2,2);
 float multiplier = 2;
 ```
 
-And set following values. As soon as we set any input value, this node will be invalidated again.
-Our node will be invalidated as soon as we change any input and it will calculate the output again when the next time get() method is called.
+And set following values. Our node will be invalidated once we change any input again and 
+it will calculate the output again when the next time get() method is called.
 ```java
-vNode.firstInput.set(v1);
+multiplyNode.firstInput.set(v1);
 ```
 
-We can set as many as inputs, It wont do any calculation until we call get() method.
+We can set as many as inputs, it wont do any calculation until we call get() method. 
+That's why its called lazy evaluation.
 ```java
-vNode.secondInput.set(v2);
-vNode.thirdInput.set(multiplier);
+multiplyNode.secondInput.set(v2);
+multiplyNode.thirdInput.set(multiplier);
 ```
 
-Once we are done with setting inputs we can call get() method and it will calculate new output.
-It will print "output computed"
+Once we are done with setting inputs, we can call get() method and it will calculate new output 
+and print "output computed".
 ```java
-out = vNode.get();
+out = multiplyNode.get();
 ```
 
-Lets see what we got here again. This will print "Vector3{x=4.0, y=4.0, z=4.0}"
+Lets see what we got here again. This will print "Vector3{x=4.0, y=4.0, z=4.0}".
 ```java
 System.out.println(out);
 ```
 
-If we call get() again, it wont compute anything because there is no any change on the inputs, it will simply return same cached value
-It wont print "output computed"
+If we call get() again, it wont compute anything because there is no any change on the inputs, 
+it will simply return same cached value and wont print "output computed".
 ```java
-out = vNode.get();
+out = multiplyNode.get();
 ```
 
-We can see computed output still same
+We can see computed output still same.
 ```java
 System.out.println(out);
 ```
@@ -181,19 +181,19 @@ Node<Float> vectorLengthNode = new Node<Float>() {
 ```
 Now we connect this node to previous multiply node's third input.
 ```java
-vectorLengthNode.connectTo(vNode.thirdInput);
+vectorLengthNode.connectTo(multiplyNode.thirdInput);
 ```
 
 or we can do reverse,
 ```java
-vNode.thirdInput.connectFrom(vectorLengthNode);
+multiplyNode.thirdInput.connectFrom(vectorLengthNode);
 ```
 
 Getting connected also invalidates node. So calling get() method will trigger all invalidated nodes
 But when we try to evaluate this line we'll get "java.lang.NullPointerException"
 Because in the vectorLengthNode we didn't initialize input input and returns null and causes this error
 ```java
-out = vNode.get();
+out = multiplyNode.get();
 ```
 
 So we set initial value to input input
@@ -202,12 +202,14 @@ Since it's anonymous class we can reach its properties by getProperty(int i) met
 vectorLengthNode.getInput(0).set(new Vector3(1,2,3));
 ```
 
-It will work this time, and calculate new output
+It will work this time and calculate new output.
+It will print "vector length computed" first from vectorlLengthNode
+and print "output computed" second from multiplyNode
 ```java
-out = vNode.get();
+out = multiplyNode.get();
 ```
 
-We'll see new value is Vector3{x=7.483315, y=7.483315, z=7.483315}
+We'll see new value is Vector3{x=7.483315, y=7.483315, z=7.483315}.
 ```java
 System.out.println(out);
 ```

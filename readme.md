@@ -184,27 +184,27 @@ Now we connect this node to previous multiply node's third input.
 vectorLengthNode.connectTo(multiplyNode.thirdInput);
 ```
 
-or we can do reverse,
+Or we can do reverse.
 ```java
 multiplyNode.thirdInput.connectFrom(vectorLengthNode);
 ```
 
-Getting connected also invalidates node. So calling get() method will trigger all invalidated nodes
-But when we try to evaluate this line we'll get "java.lang.NullPointerException"
-Because in the vectorLengthNode we didn't initialize input input and returns null and causes this error
+Getting connected also invalidates node. So calling get() method will trigger all invalidated nodes.
+But when we try to evaluate this line we'll get "java.lang.NullPointerException".
+Because in the vectorLengthNode we didn't initialize input input and returns null and causes this error.
 ```java
 out = multiplyNode.get();
 ```
 
-So we set initial value to input input
-Since it's anonymous class we can reach its properties by getProperty(int i) method
+So we set initial value to input property.
+Since it's anonymous class, we can reach its properties by getInput method.
 ```java
 vectorLengthNode.getInput(0).set(new Vector3(1,2,3));
 ```
 
 It will work this time and calculate new output.
 It will print "vector length computed" first from vectorlLengthNode
-and print "output computed" second from multiplyNode
+and print "output computed" second from multiplyNode.
 ```java
 out = multiplyNode.get();
 ```

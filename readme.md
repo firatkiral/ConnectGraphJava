@@ -162,8 +162,8 @@ System.out.println(out);
 
 Creating Node Chain:
 -------------------
-Lets start creating another node calculates length of a vector
-This time we will use anonymous class instead.
+Lets start creating another node calculates length of a vector.
+This time we will use anonymous class instead. It will return float value as we use Float class as template.
 ```java
 Node<Float> vectorLengthNode = new Node<Float>() {
     public final Input<Vector3> input = new Input<>();
@@ -179,7 +179,7 @@ Node<Float> vectorLengthNode = new Node<Float>() {
     }
 };
 ```
-Now we connect this node to previous multiply node's third input.
+Now we connect this node to previously created multiply node's third input.
 ```java
 vectorLengthNode.connectTo(multiplyNode.thirdInput);
 ```
@@ -191,7 +191,7 @@ multiplyNode.thirdInput.connectFrom(vectorLengthNode);
 
 Getting connected also invalidates node. So calling get() method will trigger all invalidated nodes.
 But when we try to evaluate this line we'll get "java.lang.NullPointerException".
-Because in the vectorLengthNode we didn't initialize input input and returns null and causes this error.
+Because in the vectorLengthNode we didn't initialize input property and returned null that caused this error.
 ```java
 out = multiplyNode.get();
 ```

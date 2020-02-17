@@ -80,7 +80,7 @@ These are the node's input properties that we want node always to keep track of 
 we have to tell node that these are the properties needs to be tracked by adding this lines to constructor:
 ```java
 VectorMultiplyNode(){
-    addProperty(firstInput, secondInput, thirdInput);
+    addInput(firstInput, secondInput, thirdInput);
 }
 ```
 
@@ -199,7 +199,7 @@ out = vNode.get();
 So we set initial value to input input
 Since it's anonymous class we can reach its properties by getProperty(int i) method
 ```java
-vectorLengthNode.getProperty(0).set(new Vector3(1,2,3));
+vectorLengthNode.getInput(0).set(new Vector3(1,2,3));
 ```
 
 It will work this time, and calculate new output

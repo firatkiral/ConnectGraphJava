@@ -54,7 +54,7 @@ class NodeTest {
         //Lets start creating another node calculates length of a vector
         //This time we will use anonymous class instead.
         Node<Float> vectorLengthNode = new Node<Float>() {
-            public final Property<Vector3> input = new Property<>();
+            public final Input<Vector3> input = new Input<>();
             {
                 addProperty(input);
             }

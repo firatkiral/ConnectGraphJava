@@ -40,9 +40,9 @@ And our application does some vec3 math calculations such as multiply. Lets take
 look at our multiply node example:
 ```java
 public class VectorMultiplyNode extends Node<Vector3> {
-    Property<Vector3> firstInput = new Property<>(new Vector3());
-    Property<Vector3> secondInput = new Property<>(new Vector3());
-    Property<Float> thirdInput = new Property<>(0f);
+    Input<Vector3> firstInput = new Input<>(new Vector3());
+    Input<Vector3> secondInput = new Input<>(new Vector3());
+    Input<Float> thirdInput = new Input<>(0f);
 
     VectorMultiplyNode(){
         addProperty(firstInput, secondInput, thirdInput);
@@ -71,9 +71,9 @@ As we can see there are three different inputs named firstInput, secondInput and
 can have different templates. In our case will use two vector and one float input.
 We will only use these for calculate output.
 ```java
-Property<Float> firstInput = new Property<>(new Vector3());
-Property<Vector3> secondInput = new Property<>(new Vector3());
-Property<Float> thirdInput = new Property<>(0f);
+Input<Float> firstInput = new Input<>(new Vector3());
+Input<Vector3> secondInput = new Input<>(new Vector3());
+Input<Float> thirdInput = new Input<>(0f);
 ```
 
 These are the node's input properties that we want node always to keep track of if these properties are changed. To do that
@@ -166,7 +166,7 @@ Lets start creating another node calculates length of a vector
 This time we will use anonymous class instead.
 ```java
 Node<Float> vectorLengthNode = new Node<Float>() {
-    public final Property<Vector3> input = new Property<>();
+    public final Input<Vector3> input = new Input<>();
     {
         addProperty(input);
     }
@@ -191,12 +191,12 @@ vNode.thirdInput.connectFrom(vectorLengthNode);
 
 Getting connected also invalidates node. So calling get() method will trigger all invalidated nodes
 But when we try to evaluate this line we'll get "java.lang.NullPointerException"
-Because in the vectorLengthNode we didn't initialize input property and returns null and causes this error
+Because in the vectorLengthNode we didn't initialize input input and returns null and causes this error
 ```java
 out = vNode.get();
 ```
 
-So we set initial value to input property
+So we set initial value to input input
 Since it's anonymous class we can reach its properties by getProperty(int i) method
 ```java
 vectorLengthNode.getProperty(0).set(new Vector3(1,2,3));

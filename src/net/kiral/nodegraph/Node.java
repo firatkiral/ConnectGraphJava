@@ -5,14 +5,14 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Objects;
 
-public abstract class Node<T> extends Property<T> implements Iterable<Property> {
-    private final List<Property> inputList = new ArrayList<>();
+public abstract class Node<T> extends Input<T> implements Iterable<Input> {
+    private final List<Input> inputList = new ArrayList<>();
 
-    public final void bind(Property... properties) {
+    public final void bind(Input... properties) {
         boolean markInvalid = false;
-        for (Property property : properties) {
-            Objects.requireNonNull(property, "property");
-            if (property.addListener(invalidationListener)) {
+        for (Input input : properties) {
+            Objects.requireNonNull(input, "property");
+            if (input.addListener(invalidationListener)) {
                 markInvalid = true;
             }
         }
@@ -21,11 +21,11 @@ public abstract class Node<T> extends Property<T> implements Iterable<Property> 
         }
     }
 
-    public final void unbind(Property... properties) {
+    public final void unbind(Input... properties) {
         boolean markInvalid = false;
-        for (Property property : properties) {
-            Objects.requireNonNull(property, "property");
-            if (property.removeListener(invalidationListener)) {
+        for (Input input : properties) {
+            Objects.requireNonNull(input, "property");
+            if (input.removeListener(invalidationListener)) {
                 markInvalid = true;
             }
         }
@@ -35,20 +35,20 @@ public abstract class Node<T> extends Property<T> implements Iterable<Property> 
         }
     }
 
-    protected final void addProperty(Property... properties) {
-        for (Property property : properties) {
-            Objects.requireNonNull(property, "property");
-            inputList.add(property);
-            bind(property);
+    protected final void addProperty(Input... properties) {
+        for (Input input : properties) {
+            Objects.requireNonNull(input, "property");
+            inputList.add(input);
+            bind(input);
         }
     }
 
-    public final Property getProperty(int i) {
+    public final Input getProperty(int i) {
         return this.inputList.get(i);
     }
 
     @Override
-    public Iterator<Property> iterator() {
+    public Iterator<Input> iterator() {
         return inputList.iterator();
     }
 

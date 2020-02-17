@@ -1,9 +1,9 @@
 package net.kiral.nodegraph;
 
 public class VectorMultiplyNode extends Node<Vector3> {
-    Property<Vector3> firstInput = new Property<>(new Vector3());
-    Property<Vector3> secondInput = new Property<>(new Vector3());
-    Property<Float> thirdInput = new Property<>(0f);
+    Input<Vector3> firstInput = new Input<>(new Vector3());
+    Input<Vector3> secondInput = new Input<>(new Vector3());
+    Input<Float> thirdInput = new Input<>(0f);
 
     VectorMultiplyNode(){
         addProperty(firstInput, secondInput, thirdInput);

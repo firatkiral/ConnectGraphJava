@@ -2,34 +2,34 @@ package net.kiral.nodegraph;
 
 import java.util.Objects;
 
-public class Property<T> extends ObservableValue<T> {
+public class Input<T> extends ObservableValue<T> {
 
-    protected Property<T> incoming;
+    protected Input<T> incoming;
     protected InvalidationListener invalidationListener;
 
-    public Property() {
+    public Input() {
         this.invalidationListener = new InvalidationListener() {
             public void invoke() {
-                Property.this.invalidate();
+                Input.this.invalidate();
             }
         };
     }
 
-    public Property(T cache) {
+    public Input(T cache) {
         this();
         Objects.requireNonNull(cache, "cache");
         this.setCache(cache);
     }
 
-    public final Property<T> getIncoming() {
+    public final Input<T> getIncoming() {
         return this.incoming;
     }
 
-    public final void setIncoming( Property<T> val) {
+    public final void setIncoming( Input<T> val) {
         this.incoming = val;
     }
 
-    public final void connectFrom(Property<T> incoming) {
+    public final void connectFrom(Input<T> incoming) {
         Objects.requireNonNull(incoming, "incoming");
         if (incoming != this.incoming) {
             this.disconnect();
@@ -39,7 +39,7 @@ public class Property<T> extends ObservableValue<T> {
         }
     }
 
-    public final void connectTo(Property<T> connection) {
+    public final void connectTo(Input<T> connection) {
         Objects.requireNonNull(connection, "connection");
         connection.connectFrom(this);
     }

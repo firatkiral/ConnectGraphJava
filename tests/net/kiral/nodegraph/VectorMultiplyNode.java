@@ -6,7 +6,7 @@ public class VectorMultiplyNode extends Node<Vector3> {
     Input<Float> thirdInput = new Input<>(0f);
 
     VectorMultiplyNode(){
-        addProperty(firstInput, secondInput, thirdInput);
+        addInput(firstInput, secondInput, thirdInput);
     }
 
     @Override

@@ -8,10 +8,10 @@ import java.util.Objects;
 public abstract class Node<T> extends Input<T> implements Iterable<Input> {
     private final List<Input> inputList = new ArrayList<>();
 
-    public final void bind(Input... properties) {
+    public final void bind(Input... inputs) {
         boolean markInvalid = false;
-        for (Input input : properties) {
-            Objects.requireNonNull(input, "property");
+        for (Input input : inputs) {
+            Objects.requireNonNull(input, "input");
             if (input.addListener(invalidationListener)) {
                 markInvalid = true;
             }
@@ -21,10 +21,10 @@ public abstract class Node<T> extends Input<T> implements Iterable<Input> {
         }
     }
 
-    public final void unbind(Input... properties) {
+    public final void unbind(Input... inputs) {
         boolean markInvalid = false;
-        for (Input input : properties) {
-            Objects.requireNonNull(input, "property");
+        for (Input input : inputs) {
+            Objects.requireNonNull(input, "input");
             if (input.removeListener(invalidationListener)) {
                 markInvalid = true;
             }
@@ -35,15 +35,15 @@ public abstract class Node<T> extends Input<T> implements Iterable<Input> {
         }
     }
 
-    protected final void addProperty(Input... properties) {
-        for (Input input : properties) {
-            Objects.requireNonNull(input, "property");
+    protected final void addInput(Input... inputs) {
+        for (Input input : inputs) {
+            Objects.requireNonNull(input, "input");
             inputList.add(input);
             bind(input);
         }
     }
 
-    public final Input getProperty(int i) {
+    public final Input getInput(int i) {
         return this.inputList.get(i);
     }
 

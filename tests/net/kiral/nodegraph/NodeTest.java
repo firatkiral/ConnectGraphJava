@@ -56,7 +56,7 @@ class NodeTest {
         Node<Float> vectorLengthNode = new Node<Float>() {
             public final Input<Vector3> input = new Input<>();
             {
-                addProperty(input);
+                addInput(input);
             }
             @Override
             protected Float computeValue() {
@@ -80,7 +80,7 @@ class NodeTest {
 
         //So we set initial value to input property
         //Since it's anonymous class we can reach its properties by getProperty(int i) method
-        vectorLengthNode.getProperty(0).set(new Vector3(1,2,3));
+        vectorLengthNode.getInput(0).set(new Vector3(1,2,3));
 
         //It will work this time, and calculate new output
         out = vNode.get();

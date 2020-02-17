@@ -4,16 +4,10 @@ import java.util.Objects;
 
 public class Property<T> extends ObservableValue<T> {
 
-    private ObservableValue<T> incoming;
-    private InvalidationListener cacheDirtyListener;
-    private InvalidationListener invalidationListener;
+    protected Property<T> incoming;
+    protected InvalidationListener invalidationListener;
 
     public Property() {
-        this.cacheDirtyListener = new InvalidationListener() {
-            public void invoke() {
-                Property.this.invalidate();
-            }
-        };
         this.invalidationListener = new InvalidationListener() {
             public void invoke() {
                 Property.this.invalidate();
@@ -27,25 +21,15 @@ public class Property<T> extends ObservableValue<T> {
         this.setCache(cache);
     }
 
-
-    public final ObservableValue<T> getIncoming() {
+    public final Property<T> getIncoming() {
         return this.incoming;
     }
 
-    public final void setIncoming( ObservableValue<T> val) {
+    public final void setIncoming( Property<T> val) {
         this.incoming = val;
     }
 
-    public final InvalidationListener getInvalidationListener() {
-        return this.invalidationListener;
-    }
-
-    public final void setInvalidationListener(InvalidationListener val) {
-        Objects.requireNonNull(val, "<set-?>");
-        this.invalidationListener = val;
-    }
-
-    public final void connectFrom(ObservableValue<T> incoming) {
+    public final void connectFrom(Property<T> incoming) {
         Objects.requireNonNull(incoming, "incoming");
         if (incoming != this.incoming) {
             this.disconnect();
@@ -53,7 +37,6 @@ public class Property<T> extends ObservableValue<T> {
             this.incoming.addListener(invalidationListener);
             invalidate();
         }
-
     }
 
     public final void connectTo(Property<T> connection) {
@@ -83,7 +66,6 @@ public class Property<T> extends ObservableValue<T> {
             this.validate();
             this.onValidate();
         }
-
         return this.getCache();
     }
 

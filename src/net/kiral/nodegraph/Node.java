@@ -1,42 +1,31 @@
 package net.kiral.nodegraph;
 
 import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Objects;
 
-public abstract class Node<T> extends ObservableValue<T> {
-    private final List<Observable> observableList = new ArrayList<>();
+public abstract class Node<T> extends Property<T> implements Iterable<Property> {
+    private final List<Property> inputList = new ArrayList<>();
 
-    private InvalidationListener invalidationListener = (new InvalidationListener() {
-        public void invoke() {
-            Node.this.invalidate();
-        }
-    });
-
-    public final void setInvalidationListener(InvalidationListener val) {
-        Objects.requireNonNull(val, "<set-?>");
-        this.invalidationListener = val;
-    }
-
-    public final void bind(Observable... observables) {
+    public final void bind(Property... properties) {
         boolean markInvalid = false;
-        for (Observable observable : observables) {
-            Objects.requireNonNull(observable, "observable");
-            if (observable.addListener(invalidationListener)) {
+        for (Property property : properties) {
+            Objects.requireNonNull(property, "property");
+            if (property.addListener(invalidationListener)) {
                 markInvalid = true;
             }
         }
         if (markInvalid) {
             invalidate();
         }
-
     }
 
-    public final void unbind(Observable... observables) {
+    public final void unbind(Property... properties) {
         boolean markInvalid = false;
-        for (Observable observable : observables) {
-            Objects.requireNonNull(observable, "observable");
-            if (observable.removeListener(invalidationListener)) {
+        for (Property property : properties) {
+            Objects.requireNonNull(property, "property");
+            if (property.removeListener(invalidationListener)) {
                 markInvalid = true;
             }
         }
@@ -46,39 +35,35 @@ public abstract class Node<T> extends ObservableValue<T> {
         }
     }
 
-    public final void connectTo(Property<T> connection) {
-        Objects.requireNonNull(connection, "connection");
-        connection.connectFrom(this);
-    }
-
-    protected final void addProperty(Observable... observables) {
-        for (Observable observable : observables) {
-            Objects.requireNonNull(observable, "observable");
-            observableList.add(observable);
-            bind(observable);
+    protected final void addProperty(Property... properties) {
+        for (Property property : properties) {
+            Objects.requireNonNull(property, "property");
+            inputList.add(property);
+            bind(property);
         }
     }
 
-
-    public final Observable getProperty(int i) {
-        return this.observableList.get(i);
+    public final Property getProperty(int i) {
+        return this.inputList.get(i);
     }
 
-
-    public final List<Observable> getPropertyList() {
-        return this.observableList;
+    @Override
+    public Iterator<Property> iterator() {
+        return inputList.iterator();
     }
-
 
     public T get() {
-        if (!this.isValid()) {
-            this.setCache(this.computeValue());
-            this.validate();
-            this.onValidate();
+        if (!isValid()) {
+            if (this.incoming != null) {
+                this.setCache(this.incoming.get());
+            } else {
+                setCache(this.computeValue());
+            }
+            validate();
+            onValidate();
         }
-        return this.getCache();
+        return getCache();
     }
-
 
     protected abstract T computeValue();
 }

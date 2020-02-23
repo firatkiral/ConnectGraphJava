@@ -25,10 +25,6 @@ public class Input<T> extends ObservableValue<T> {
         return this.incoming;
     }
 
-    public final void setIncoming( Input<T> val) {
-        this.incoming = val;
-    }
-
     public final void connectFrom(Input<T> incoming) {
         Objects.requireNonNull(incoming, "incoming");
         if (incoming != this.incoming) {
@@ -55,7 +51,6 @@ public class Input<T> extends ObservableValue<T> {
     public void set(T newValue) {
         this.setCache(newValue);
     }
-
 
     public T get() {
         if (!this.isValid()) {

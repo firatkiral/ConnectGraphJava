@@ -72,9 +72,7 @@ public abstract class Node<T> extends Input<T> implements Iterable<Input> {
         return getCache();
     }
 
-    private Callable<T> task = () -> {
-        return computeValue();
-    };
+    private Callable<T> task = this::computeValue;
 
     private Future<T> result = null;
 

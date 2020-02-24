@@ -4,9 +4,7 @@ import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Objects;
-import java.util.concurrent.Callable;
-import java.util.concurrent.ExecutionException;
-import java.util.concurrent.Future;
+import java.util.concurrent.*;
 
 public abstract class Node<T> extends Input<T> implements Iterable<Input> {
     private final List<Input> inputList = new ArrayList<>();
@@ -63,16 +61,7 @@ public abstract class Node<T> extends Input<T> implements Iterable<Input> {
                 if (GraphManager.isSerialComputing()) {
                     setCache(this.computeValue());
                 } else {
-                    inputList.forEach(input -> {
-                        if (input.getIncoming() instanceof Node) {
-                            if (!input.incoming.isValid()) {
-                                ((Node) input.incoming).submitTask();
-                            }
-                        }
-                    });
-                    if (!submitted) {
-                        submitTask();
-                    }
+                    submitTask();
                     setCache(this._computeValue());
                     submitted = false;
                 }
@@ -91,8 +80,14 @@ public abstract class Node<T> extends Input<T> implements Iterable<Input> {
 
     private boolean submitted = false;
 
-    private synchronized void submitTask() {
+    protected void submitTask() {
         if (!submitted) {
+            inputList.forEach(input -> {
+                if (!input.isValid()) {
+                    input.submitTask();
+                }
+            });
+
             result = GraphManager.submitTask(task);
             submitted = true;
         }

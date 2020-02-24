@@ -61,7 +61,7 @@ public class Observable {
             this.isValid = false;
             onInvalidate();
             listenerList.forEach(InvalidationListener::invoke);
-            staticListenerList.forEach(InvalidationListener::invoke);
+            GraphManager.invokeStaticListeners();
         }
     }
 
@@ -71,27 +71,4 @@ public class Observable {
     public final void onValidate() {
     }
 
-    //static listeners
-    //if we need a global tracker to get notified when any of observable in the app gets invalidated
-    private static final List<InvalidationListener> staticListenerList = new ArrayList<>();
-
-    public static boolean addStaticListener(InvalidationListener listener) {
-        Objects.requireNonNull(listener, "listener");
-        if (!staticListenerList.contains(listener)) {
-            staticListenerList.add(listener);
-            return true;
-        } else {
-            return false;
-        }
-    }
-
-    public static boolean removeStaticListener(InvalidationListener listener) {
-        return staticListenerList.remove(listener);
-    }
-
-    public static void clearStaticListeners() {
-        for (int i = 0; i < staticListenerList.size(); i++) {
-            removeStaticListener(staticListenerList.get(0));
-        }
-    }
 }

@@ -59,7 +59,7 @@ class NodeTest {
                 addInput(input);
             }
             @Override
-            protected Float computeValue() {
+            public Float computeValue() {
                 Vector3 v = input.get();
                 float out = (float) Math.sqrt(v.x * v.x + v.y * v.y + v.z * v.z);
                 System.out.println("vector length computed");

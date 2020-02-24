@@ -5,12 +5,12 @@ public class VectorMultiplyNode extends Node<Vector3> {
     Input<Vector3> secondInput = new Input<>(new Vector3());
     Input<Float> thirdInput = new Input<>(0f);
 
-    VectorMultiplyNode(){
+    VectorMultiplyNode() {
         addInput(firstInput, secondInput, thirdInput);
     }
 
     @Override
-    protected Vector3 computeValue() {
+    public Vector3 computeValue() {
         Vector3 v1 = firstInput.get();
         Vector3 v2 = secondInput.get();
         float m = thirdInput.get();

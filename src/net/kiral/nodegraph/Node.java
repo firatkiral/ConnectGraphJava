@@ -4,6 +4,9 @@ import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Objects;
+import java.util.concurrent.Callable;
+import java.util.concurrent.ExecutionException;
+import java.util.concurrent.Future;
 
 public abstract class Node<T> extends Input<T> implements Iterable<Input> {
     private final List<Input> inputList = new ArrayList<>();
@@ -57,7 +60,22 @@ public abstract class Node<T> extends Input<T> implements Iterable<Input> {
             if (this.incoming != null) {
                 this.setCache(this.incoming.get());
             } else {
-                setCache(this.computeValue());
+                if (GraphManager.isSerialComputing()) {
+                    setCache(this.computeValue());
+                } else {
+                    inputList.forEach(input -> {
+                        if (input.getIncoming() instanceof Node) {
+                            if (!input.incoming.isValid()) {
+                                ((Node) input.incoming).submitTask();
+                            }
+                        }
+                    });
+                    if (!submitted) {
+                        submitTask();
+                    }
+                    setCache(this._computeValue());
+                    submitted = false;
+                }
             }
             validate();
             onValidate();
@@ -65,5 +83,29 @@ public abstract class Node<T> extends Input<T> implements Iterable<Input> {
         return getCache();
     }
 
-    protected abstract T computeValue();
+    private Callable<T> task = () -> {
+        return computeValue();
+    };
+
+    private Future<T> result = null;
+
+    private boolean submitted = false;
+
+    private synchronized void submitTask() {
+        if (!submitted) {
+            result = GraphManager.submitTask(task);
+            submitted = true;
+        }
+    }
+
+    private synchronized T _computeValue() {
+        try {
+            return result.get();
+        } catch (InterruptedException | ExecutionException e) {
+            e.printStackTrace();
+        }
+        return null;
+    }
+
+    public abstract T computeValue();
 }

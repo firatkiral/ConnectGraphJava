@@ -15,9 +15,7 @@ public abstract class ObservableValue<T> extends Observable {
     }
 
     public final void setCache(T value) {
-        T old = this.cache;
         this.cache = value;
-        this.invalidate(this.cache, old);
     }
 
     public final boolean addListener(ChangeListener<T> listener) {
@@ -25,7 +23,7 @@ public abstract class ObservableValue<T> extends Observable {
         if (!this.listenerList.contains(listener)) {
             this.listenerList.add(listener);
             if (!this.isValid()) {
-                listener.invoke(this.cache, null);
+                listener.invoke(this.cache, this.cache);
             }
 
             listener.addDependency(this);
@@ -44,11 +42,11 @@ public abstract class ObservableValue<T> extends Observable {
         }
     }
 
-    public final void invalidate(T newValue, T oldValue) {
+    public final void invalidate( T oldValue) {
         if (this.isValid()) {
             this.onInvalidate();
             this.invalidate();
-            listenerList.forEach(observerValue -> observerValue.invoke(newValue, oldValue));
+            listenerList.forEach(observerValue -> observerValue.invoke(get(), oldValue));
         }
     }
 

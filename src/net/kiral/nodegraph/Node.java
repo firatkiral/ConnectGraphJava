@@ -58,10 +58,10 @@ public abstract class Node<T> extends Input<T> implements Iterable<Input> {
     public T get() {
         if (!isValid()) {
             if (this.incoming != null) {
-                this.setCache(this.incoming.get());
+                this.set(this.incoming.get());
             } else {
                 if (GraphManager.isSerialComputing()) {
-                    setCache(this.computeValue());
+                    set(this.computeValue());
                 } else {
                     inputList.forEach(input -> {
                         if (input.getIncoming() instanceof Node) {
@@ -73,7 +73,7 @@ public abstract class Node<T> extends Input<T> implements Iterable<Input> {
                     if (!submitted) {
                         submitTask();
                     }
-                    setCache(this._computeValue());
+                    set(this._computeValue());
                     submitted = false;
                 }
             }

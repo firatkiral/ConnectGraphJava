@@ -18,7 +18,7 @@ public class Input<T> extends ObservableValue<T> {
     public Input(T cache) {
         this();
         Objects.requireNonNull(cache, "cache");
-        this.setCache(cache);
+        this.set(cache);
     }
 
     public final Input<T> getIncoming() {
@@ -49,13 +49,15 @@ public class Input<T> extends ObservableValue<T> {
     }
 
     public void set(T newValue) {
-        this.setCache(newValue);
+        T old = getCache();
+        setCache(newValue);
+        this.invalidate(old);
     }
 
     public T get() {
         if (!this.isValid()) {
             if (this.incoming != null) {
-                this.setCache(this.incoming.get());
+                this.set(this.incoming.get());
             }
 
             this.validate();

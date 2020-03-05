@@ -6,14 +6,14 @@ import java.util.List;
 import java.util.Objects;
 import java.util.concurrent.*;
 
-public abstract class Node<T> extends Input<T> implements Iterable<Input> {
-    private final List<Input> inputList = new ArrayList<>();
+public abstract class Node<T> extends Socket<T> implements Iterable<Socket> {
+    private final List<Socket> socketList = new ArrayList<>();
 
-    public final void bind(Input... inputs) {
+    public final void bind(Socket... sockets) {
         boolean markInvalid = false;
-        for (Input input : inputs) {
-            Objects.requireNonNull(input, "input");
-            if (input.addListener(invalidationListener)) {
+        for (Socket socket : sockets) {
+            Objects.requireNonNull(socket, "input");
+            if (socket.addListener(invalidationListener)) {
                 markInvalid = true;
             }
         }
@@ -22,11 +22,11 @@ public abstract class Node<T> extends Input<T> implements Iterable<Input> {
         }
     }
 
-    public final void unbind(Input... inputs) {
+    public final void unbind(Socket... sockets) {
         boolean markInvalid = false;
-        for (Input input : inputs) {
-            Objects.requireNonNull(input, "input");
-            if (input.removeListener(invalidationListener)) {
+        for (Socket socket : sockets) {
+            Objects.requireNonNull(socket, "input");
+            if (socket.removeListener(invalidationListener)) {
                 markInvalid = true;
             }
         }
@@ -36,21 +36,21 @@ public abstract class Node<T> extends Input<T> implements Iterable<Input> {
         }
     }
 
-    protected final void addInput(Input... inputs) {
-        for (Input input : inputs) {
-            Objects.requireNonNull(input, "input");
-            inputList.add(input);
-            bind(input);
+    protected final void addInput(Socket... sockets) {
+        for (Socket socket : sockets) {
+            Objects.requireNonNull(socket, "input");
+            socketList.add(socket);
+            bind(socket);
         }
     }
 
-    public final Input getInput(int i) {
-        return this.inputList.get(i);
+    public final Socket getInput(int i) {
+        return this.socketList.get(i);
     }
 
     @Override
-    public Iterator<Input> iterator() {
-        return inputList.iterator();
+    public Iterator<Socket> iterator() {
+        return socketList.iterator();
     }
 
     public T get() {
@@ -80,9 +80,9 @@ public abstract class Node<T> extends Input<T> implements Iterable<Input> {
 
     protected void submitTask() {
         if (!submitted) {
-            inputList.forEach(input -> {
-                if (!input.isValid()) {
-                    input.submitTask();
+            socketList.forEach(socket -> {
+                if (!socket.isValid()) {
+                    socket.submitTask();
                 }
             });
 

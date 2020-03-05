@@ -4,9 +4,7 @@ import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Objects;
-import java.util.concurrent.Callable;
-import java.util.concurrent.ExecutionException;
-import java.util.concurrent.Future;
+import java.util.concurrent.*;
 
 public abstract class Node<T> extends Input<T> implements Iterable<Input> {
     private final List<Input> inputList = new ArrayList<>();
@@ -58,22 +56,13 @@ public abstract class Node<T> extends Input<T> implements Iterable<Input> {
     public T get() {
         if (!isValid()) {
             if (this.incoming != null) {
-                this.set(this.incoming.get());
+                this.setCache(this.incoming.get());
             } else {
                 if (GraphManager.isSerialComputing()) {
-                    set(this.computeValue());
+                    setCache(this.computeValue());
                 } else {
-                    inputList.forEach(input -> {
-                        if (input.getIncoming() instanceof Node) {
-                            if (!input.incoming.isValid()) {
-                                ((Node) input.incoming).submitTask();
-                            }
-                        }
-                    });
-                    if (!submitted) {
-                        submitTask();
-                    }
-                    set(this._computeValue());
+                    submitTask();
+                    setCache(this._computeValue());
                     submitted = false;
                 }
             }
@@ -83,16 +72,20 @@ public abstract class Node<T> extends Input<T> implements Iterable<Input> {
         return getCache();
     }
 
-    private Callable<T> task = () -> {
-        return computeValue();
-    };
+    private Callable<T> task = this::computeValue;
 
     private Future<T> result = null;
 
     private boolean submitted = false;
 
-    private synchronized void submitTask() {
+    protected void submitTask() {
         if (!submitted) {
+            inputList.forEach(input -> {
+                if (!input.isValid()) {
+                    input.submitTask();
+                }
+            });
+
             result = GraphManager.submitTask(task);
             submitted = true;
         }

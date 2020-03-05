@@ -41,10 +41,16 @@ public class Input<T> extends ObservableValue<T> {
     }
 
     public final void disconnect() {
-        if(incoming != null){
+        if (incoming != null) {
             incoming.removeListener(invalidationListener);
             incoming = null;
             //no need to invalidate, cache stays same
+        }
+    }
+
+    protected void submitTask() {
+        if (incoming != null && !incoming.isValid()) {
+            incoming.submitTask();
         }
     }
 

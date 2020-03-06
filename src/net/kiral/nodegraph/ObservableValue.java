@@ -8,7 +8,7 @@ public abstract class ObservableValue<T> extends Observable {
 
     private final List<ChangeListener<T>> listenerList = new ArrayList<>();
 
-    private T cache;
+    protected T cache;
 
     public final T getCache() {
         return this.cache;

@@ -56,20 +56,20 @@ public abstract class Node<T> extends Socket<T> implements Iterable<Socket> {
     public T get() {
         if (!isValid()) {
             if (this.incoming != null) {
-                this.setCache(this.incoming.get());
+                this.cache = this.incoming.get();
             } else {
                 if (GraphManager.isSerialComputing()) {
-                    setCache(this.computeValue());
+                    this.cache = this.computeValue();
                 } else {
                     submitTask();
-                    setCache(this._computeValue());
+                    this.cache = this._computeValue();
                     submitted = false;
                 }
             }
             validate();
             onValidate();
         }
-        return getCache();
+        return cache;
     }
 
     private Callable<T> task = this::computeValue;

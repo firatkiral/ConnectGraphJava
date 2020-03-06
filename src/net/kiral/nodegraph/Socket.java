@@ -18,7 +18,7 @@ public class Socket<T> extends ObservableValue<T> {
     public Socket(T cache) {
         this();
         Objects.requireNonNull(cache, "cache");
-        this.set(cache);
+        this.cache = cache;
     }
 
     public final Socket<T> getIncoming() {
@@ -55,21 +55,21 @@ public class Socket<T> extends ObservableValue<T> {
     }
 
     public void set(T newValue) {
-        T old = getCache();
-        setCache(newValue);
+        T old = cache;
+        this.cache = newValue;
         this.invalidate(old);
     }
 
     public T get() {
         if (!this.isValid()) {
             if (this.incoming != null) {
-                this.set(this.incoming.get());
+                this.cache = this.incoming.get();
             }
 
             this.validate();
             this.onValidate();
         }
-        return this.getCache();
+        return cache;
     }
 
     public final void dispose() {

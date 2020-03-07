@@ -43,7 +43,7 @@ public class GraphManager {
     }
 
     protected static void invokeStaticListeners() {
-        staticListenerList.forEach(InvalidationListener::invoke);
+        staticListenerList.forEach(l->l.invoke());
     }
 
     public static void terminateGraph() {

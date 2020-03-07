@@ -27,8 +27,6 @@ public class Observable {
             if (!this.valid) {
                 listener.invoke();
             }
-
-            listener.addDependency(this);
             return true;
         } else {
             return false;
@@ -37,7 +35,6 @@ public class Observable {
 
     public final boolean removeListener(InvalidationListener listener) {
         if (this.listenerList.remove(listener)) {
-            listener.removeDependency(this);
             return true;
         } else {
             return false;

@@ -6,6 +6,7 @@ import java.util.List;
 import java.util.Objects;
 import java.util.concurrent.*;
 
+//todo: need outgoing list to track of observers
 public abstract class Node<T> extends Socket<T> implements Iterable<Socket> {
     private final List<Socket> socketList = new ArrayList<>();
 

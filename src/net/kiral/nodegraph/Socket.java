@@ -2,6 +2,7 @@ package net.kiral.nodegraph;
 
 import java.util.Objects;
 
+//todo: need outgoing list to track of observers
 public class Socket<T> extends ObservableValue<T> {
 
     protected Socket<T> incoming;
@@ -74,7 +75,6 @@ public class Socket<T> extends ObservableValue<T> {
 
     public final void dispose() {
         this.clearListeners();
-        this.invalidationListener.dispose();
     }
 
     public final boolean isConnected() {

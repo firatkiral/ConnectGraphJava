@@ -25,8 +25,6 @@ public abstract class ObservableValue<T> extends Observable {
             if (!this.isValid()) {
                 listener.invoke(this.cache, this.cache);
             }
-
-            listener.addDependency(this);
             return true;
         } else {
             return false;
@@ -35,7 +33,6 @@ public abstract class ObservableValue<T> extends Observable {
 
     public final boolean removeListener(ChangeListener<T> listener) {
         if (this.listenerList.remove(listener)) {
-            listener.removeDependency(this);
             return true;
         } else {
             return false;

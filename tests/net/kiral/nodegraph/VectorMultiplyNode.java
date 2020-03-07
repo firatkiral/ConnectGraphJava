@@ -6,7 +6,7 @@ public class VectorMultiplyNode extends Node<Vector3> {
     Socket<Float> thirdSocket = new Socket<>(0f);
 
     VectorMultiplyNode() {
-        addInput(firstSocket, secondSocket, thirdSocket);
+        addSocket(firstSocket, secondSocket, thirdSocket);
     }
 
     @Override

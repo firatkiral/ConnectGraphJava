@@ -56,7 +56,7 @@ class NodeTest {
         Node<Float> vectorLengthNode = new Node<Float>() {
             public final Socket<Vector3> input = new Socket<>();
             {
-                addInput(input);
+                addSocket(input);
             }
             @Override
             public Float computeValue() {
@@ -80,7 +80,7 @@ class NodeTest {
 
         //So we set initial value to input property
         //Since it's anonymous class we can reach its properties by getProperty(int i) method
-        vectorLengthNode.getInput(0).set(new Vector3(1,2,3));
+        vectorLengthNode.getSocket(0).set(new Vector3(1,2,3));
 
         //It will work this time, and calculate new output
         out = multiplyNode.get();

@@ -12,7 +12,7 @@ public abstract class Node<T> extends Socket<T> implements Iterable<Socket> {
     public final void bind(Socket... sockets) {
         boolean markInvalid = false;
         for (Socket socket : sockets) {
-            Objects.requireNonNull(socket, "input");
+            Objects.requireNonNull(socket, "socket");
             if (socket.addListener(invalidationListener)) {
                 markInvalid = true;
             }
@@ -25,7 +25,7 @@ public abstract class Node<T> extends Socket<T> implements Iterable<Socket> {
     public final void unbind(Socket... sockets) {
         boolean markInvalid = false;
         for (Socket socket : sockets) {
-            Objects.requireNonNull(socket, "input");
+            Objects.requireNonNull(socket, "socket");
             if (socket.removeListener(invalidationListener)) {
                 markInvalid = true;
             }
@@ -36,15 +36,15 @@ public abstract class Node<T> extends Socket<T> implements Iterable<Socket> {
         }
     }
 
-    protected final void addInput(Socket... sockets) {
+    protected final void addSocket(Socket... sockets) {
         for (Socket socket : sockets) {
-            Objects.requireNonNull(socket, "input");
+            Objects.requireNonNull(socket, "socket");
             socketList.add(socket);
             bind(socket);
         }
     }
 
-    public final Socket getInput(int i) {
+    public final Socket getSocket(int i) {
         return this.socketList.get(i);
     }
 
@@ -78,7 +78,7 @@ public abstract class Node<T> extends Socket<T> implements Iterable<Socket> {
 
     private boolean submitted = false;
 
-    protected void submitTask() {
+    protected synchronized void submitTask() {
         if (!submitted) {
             socketList.forEach(socket -> {
                 if (!socket.isValid()) {

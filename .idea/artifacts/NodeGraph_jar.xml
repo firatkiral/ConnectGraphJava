@@ -2,7 +2,7 @@
   <artifact type="jar" name="NodeGraph:jar">
     <output-path>$PROJECT_DIR$/release</output-path>
     <root id="archive" name="NodeGraph.jar">
-      <element id="module-output" name="NodeGraph" />
+      <element id="module-output" name="ConnectGraph" />
     </root>
   </artifact>
 </component>

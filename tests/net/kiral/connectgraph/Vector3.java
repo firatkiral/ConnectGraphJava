@@ -1,4 +1,4 @@
-package net.kiral.nodegraph;
+package net.kiral.connectgraph;
 
 public class Vector3 {
     public float x;

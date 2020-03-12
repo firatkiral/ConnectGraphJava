@@ -1,32 +1,32 @@
-package net.kiral.nodegraph;
+package net.kiral.connectgraph;
 
 import java.util.Objects;
 
 //todo: need outgoing list to track of observers
-public class Socket<T> extends ObservableValue<T> {
+public class Slot<T> extends ObservableValue<T> {
 
-    protected Socket<T> incoming;
+    protected Slot<T> incoming;
     protected InvalidationListener invalidationListener;
 
-    public Socket() {
+    public Slot() {
         this.invalidationListener = new InvalidationListener() {
             public void invoke() {
-                Socket.this.invalidate();
+                Slot.this.invalidate();
             }
         };
     }
 
-    public Socket(T cache) {
+    public Slot(T cache) {
         this();
         Objects.requireNonNull(cache, "cache");
         this.cache = cache;
     }
 
-    public final Socket<T> getIncoming() {
+    public final Slot<T> getIncoming() {
         return this.incoming;
     }
 
-    public final void connectFrom(Socket<T> incoming) {
+    public final void connectFrom(Slot<T> incoming) {
         Objects.requireNonNull(incoming, "incoming");
         if (incoming != this.incoming) {
             this.disconnect();
@@ -36,7 +36,7 @@ public class Socket<T> extends ObservableValue<T> {
         }
     }
 
-    public final void connectTo(Socket<T> connection) {
+    public final void connectTo(Slot<T> connection) {
         Objects.requireNonNull(connection, "connection");
         connection.connectFrom(this);
     }

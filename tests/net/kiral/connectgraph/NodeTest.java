@@ -1,4 +1,4 @@
-package net.kiral.nodegraph;
+package net.kiral.connectgraph;
 
 class NodeTest {
     public static void main(String[] args) {
@@ -26,11 +26,11 @@ class NodeTest {
 
         //and set these values
         //as soon as we set any input value, this node will be invalidated again.
-        multiplyNode.firstSocket.set(v1);
+        multiplyNode.firstSlot.set(v1);
         //now our node is invalidated and it will calculate the output again when the next time get() method is called.
         //so we can set as many as inputs without doing unnecessary calculation.
-        multiplyNode.secondSocket.set(v2);
-        multiplyNode.thirdSocket.set(multiplier);
+        multiplyNode.secondSlot.set(v2);
+        multiplyNode.thirdSlot.set(multiplier);
 
         //Once we are done with setting inputs we can call get() method and it will calculate new output
         //it will print "output computed"
@@ -54,7 +54,7 @@ class NodeTest {
         //Lets start creating another node calculates length of a vector
         //This time we will use anonymous class instead.
         Node<Float> vectorLengthNode = new Node<Float>() {
-            public final Socket<Vector3> input = new Socket<>();
+            public final Slot<Vector3> input = new Slot<>();
             {
                 addSocket(input);
             }
@@ -68,10 +68,10 @@ class NodeTest {
         };
 
         //Now we connect this node to previous multiply node's third input.
-        vectorLengthNode.connectTo(multiplyNode.thirdSocket);
+        vectorLengthNode.connectTo(multiplyNode.thirdSlot);
 
         //or we can do reverse
-        multiplyNode.thirdSocket.connectFrom(vectorLengthNode);
+        multiplyNode.thirdSlot.connectFrom(vectorLengthNode);
 
         //Getting connected also invalidates node. So calling get() method will trigger all invalidated nodes
         //But when we try to evaluate this line we'll get "java.lang.NullPointerException"

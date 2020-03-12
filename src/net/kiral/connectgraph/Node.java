@@ -1,4 +1,4 @@
-package net.kiral.nodegraph;
+package net.kiral.connectgraph;
 
 import java.util.ArrayList;
 import java.util.Iterator;
@@ -7,14 +7,14 @@ import java.util.Objects;
 import java.util.concurrent.*;
 
 //todo: need outgoing list to track of observers
-public abstract class Node<T> extends Socket<T> implements Iterable<Socket> {
-    private final List<Socket> socketList = new ArrayList<>();
+public abstract class Node<T> extends Slot<T> implements Iterable<Slot> {
+    private final List<Slot> slotList = new ArrayList<>();
 
-    public final void bind(Socket... sockets) {
+    public final void bind(Slot... slots) {
         boolean markInvalid = false;
-        for (Socket socket : sockets) {
-            Objects.requireNonNull(socket, "socket");
-            if (socket.addListener(invalidationListener)) {
+        for (Slot slot : slots) {
+            Objects.requireNonNull(slot, "slot");
+            if (slot.addListener(invalidationListener)) {
                 markInvalid = true;
             }
         }
@@ -23,11 +23,11 @@ public abstract class Node<T> extends Socket<T> implements Iterable<Socket> {
         }
     }
 
-    public final void unbind(Socket... sockets) {
+    public final void unbind(Slot... slots) {
         boolean markInvalid = false;
-        for (Socket socket : sockets) {
-            Objects.requireNonNull(socket, "socket");
-            if (socket.removeListener(invalidationListener)) {
+        for (Slot slot : slots) {
+            Objects.requireNonNull(slot, "slot");
+            if (slot.removeListener(invalidationListener)) {
                 markInvalid = true;
             }
         }
@@ -37,21 +37,21 @@ public abstract class Node<T> extends Socket<T> implements Iterable<Socket> {
         }
     }
 
-    protected final void addSocket(Socket... sockets) {
-        for (Socket socket : sockets) {
-            Objects.requireNonNull(socket, "socket");
-            socketList.add(socket);
-            bind(socket);
+    protected final void addSocket(Slot... slots) {
+        for (Slot slot : slots) {
+            Objects.requireNonNull(slot, "slot");
+            slotList.add(slot);
+            bind(slot);
         }
     }
 
-    public final Socket getSocket(int i) {
-        return this.socketList.get(i);
+    public final Slot getSocket(int i) {
+        return this.slotList.get(i);
     }
 
     @Override
-    public Iterator<Socket> iterator() {
-        return socketList.iterator();
+    public Iterator<Slot> iterator() {
+        return slotList.iterator();
     }
 
     public T get() {
@@ -81,9 +81,9 @@ public abstract class Node<T> extends Socket<T> implements Iterable<Socket> {
 
     protected synchronized void submitTask() {
         if (!submitted) {
-            socketList.forEach(socket -> {
-                if (!socket.isValid()) {
-                    socket.submitTask();
+            slotList.forEach(slot -> {
+                if (!slot.isValid()) {
+                    slot.submitTask();
                 }
             });
 

@@ -1,4 +1,4 @@
-package net.kiral.nodegraph;
+package net.kiral.connectgraph;
 
 interface InvalidationListener {
     void invoke();

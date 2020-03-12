@@ -2,10 +2,10 @@ Lazy Evaluated Node Graph
 ==========================
 This library allows apps to do heavy chained computations by using lazy evaluation.
 
-The graph is consist of hierarchical node trees. Each node has some sockets and one output. Each
-node can be connected to another node's socket. When any node's output gets called, it will calculate
+The graph is consist of hierarchical node trees. Each node has some slots and one output. Each
+node can be connected to another node's slot. When any node's output gets called, it will calculate
 all parent tree all the way up and once all parent node outputs calculated, it will always return cached 
-value until any socket changes. When the any socket gets changed, it will only update node chain on the 
+value until any slot changes. When the any slot gets changed, it will only update node chain on the 
 invalidated nodes and its child branches.
 
 Getting Started:
@@ -67,8 +67,8 @@ template in our case. By adding this we are telling node what type of output wil
 public class VectorMultiplyNode extends Node<Vector3> {
 ```
 
-As we can see there are three different sockets named firstInput, secondInput and third socket. Inputs
-can have different templates. In our case will use two vector and one float socket.
+As we can see there are three different slots named firstInput, secondInput and third slot. Inputs
+can have different templates. In our case will use two vector and one float slot.
 We will only use these for calculate output.
 ```java
 Input<Float> firstInput = new Input<>(new Vector3());
@@ -76,7 +76,7 @@ Input<Vector3> secondInput = new Input<>(new Vector3());
 Input<Float> thirdInput = new Input<>(0f);
 ```
 
-These are the node's socket properties that we want node always to keep track of if these properties are changed. To do that
+These are the node's slot properties that we want node always to keep track of if these properties are changed. To do that
 we have to tell node that these are the properties needs to be tracked by adding this lines to constructor.
 ```java
 VectorMultiplyNode(){
@@ -85,7 +85,7 @@ VectorMultiplyNode(){
 ```
 
 
-Here is the place where magic happens. We can do any computation here by using socket propertes.
+Here is the place where magic happens. We can do any computation here by using slot propertes.
 ```java
 @Override
 protected Vector3 computeValue() {
@@ -118,27 +118,27 @@ Lets see what we got here. This will print "Vector3{x=0.0, y=0.0, z=0.0}".
 System.out.println(out);
 ```
 
-Continue with creating our new socket values.
+Continue with creating our new slot values.
 ```java
 Vector3 v1 = new Vector3(1,1,1);
 Vector3 v2 = new Vector3(2,2,2);
 float multiplier = 2;
 ```
 
-And set following values. Our node will be invalidated once we change any socket again and 
+And set following values. Our node will be invalidated once we change any slot again and 
 it will calculate the output again when the next time get() method is called.
 ```java
 multiplyNode.firstInput.set(v1);
 ```
 
-We can set as many as sockets, it wont do any calculation until we call get() method. 
+We can set as many as slots, it wont do any calculation until we call get() method. 
 That's why its called lazy evaluation.
 ```java
 multiplyNode.secondInput.set(v2);
 multiplyNode.thirdInput.set(multiplier);
 ```
 
-Once we are done with setting sockets, we can call get() method and it will calculate new output 
+Once we are done with setting slots, we can call get() method and it will calculate new output 
 and print "output computed".
 ```java
 out = multiplyNode.get();
@@ -149,7 +149,7 @@ Lets see what we got here again. This will print "Vector3{x=4.0, y=4.0, z=4.0}".
 System.out.println(out);
 ```
 
-If we call get() again, it wont compute anything because there is no any change on the sockets, 
+If we call get() again, it wont compute anything because there is no any change on the slots, 
 it will simply return same cached value and wont print "output computed".
 ```java
 out = multiplyNode.get();
@@ -166,20 +166,20 @@ Lets start creating another node calculates length of a vector.
 This time we will use anonymous class instead. It will return float value as we use Float class as template.
 ```java
 Node<Float> vectorLengthNode = new Node<Float>() {
-    public final Input<Vector3> socket = new Input<>();
+    public final Input<Vector3> slot = new Input<>();
     {
-        addProperty(socket);
+        addProperty(slot);
     }
     @Override
     protected Float computeValue() {
-        Vector3 v = socket.get();
+        Vector3 v = slot.get();
         float out = (float) Math.sqrt(v.x * v.x + v.y * v.y + v.z * v.z);
         System.out.println("vector length computed");
         return out;
     }
 };
 ```
-Now we connect this node to previously created multiply node's third socket.
+Now we connect this node to previously created multiply node's third slot.
 ```java
 vectorLengthNode.connectTo(multiplyNode.thirdInput);
 ```
@@ -191,12 +191,12 @@ multiplyNode.thirdInput.connectFrom(vectorLengthNode);
 
 Getting connected also invalidates node. So calling get() method will trigger all invalidated nodes.
 But when we try to evaluate this line we'll get "java.lang.NullPointerException".
-Because in the vectorLengthNode we didn't initialize socket property and returned null that caused this error.
+Because in the vectorLengthNode we didn't initialize slot property and returned null that caused this error.
 ```java
 out = multiplyNode.get();
 ```
 
-So we set initial value to socket property.
+So we set initial value to slot property.
 Since it's anonymous class, we can reach its properties by getInput method.
 ```java
 vectorLengthNode.getInput(0).set(new Vector3(1,2,3));

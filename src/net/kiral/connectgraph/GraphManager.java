@@ -1,4 +1,4 @@
-package net.kiral.nodegraph;
+package net.kiral.connectgraph;
 
 import java.util.ArrayList;
 import java.util.List;

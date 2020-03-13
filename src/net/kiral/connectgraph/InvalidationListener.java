@@ -1,5 +1,5 @@
 package net.kiral.connectgraph;
 
-interface InvalidationListener {
+public interface InvalidationListener {
     void invoke();
 }

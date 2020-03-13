@@ -37,7 +37,7 @@ public abstract class Node<T> extends Slot<T> implements Iterable<Slot> {
         }
     }
 
-    protected final void addSocket(Slot... slots) {
+    protected final void addSlot(Slot... slots) {
         for (Slot slot : slots) {
             Objects.requireNonNull(slot, "slot");
             slotList.add(slot);
@@ -45,7 +45,7 @@ public abstract class Node<T> extends Slot<T> implements Iterable<Slot> {
         }
     }
 
-    public final Slot getSocket(int i) {
+    public final Slot getSlot(int i) {
         return this.slotList.get(i);
     }
 

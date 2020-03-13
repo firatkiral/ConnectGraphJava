@@ -6,7 +6,7 @@ public class VectorMultiplyNode extends Node<Vector3> {
     Slot<Float> thirdSlot = new Slot<>(0f);
 
     VectorMultiplyNode() {
-        addSocket(firstSlot, secondSlot, thirdSlot);
+        addSlot(firstSlot, secondSlot, thirdSlot);
     }
 
     @Override

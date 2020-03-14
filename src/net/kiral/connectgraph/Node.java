@@ -14,7 +14,7 @@ public abstract class Node<T> extends Slot<T> implements Iterable<Slot> {
         boolean markInvalid = false;
         for (Slot slot : slots) {
             Objects.requireNonNull(slot, "slot");
-            if (slot.addListener(invalidationListener)) {
+            if (slot.addListener(listener)) {
                 markInvalid = true;
             }
         }
@@ -27,7 +27,7 @@ public abstract class Node<T> extends Slot<T> implements Iterable<Slot> {
         boolean markInvalid = false;
         for (Slot slot : slots) {
             Objects.requireNonNull(slot, "slot");
-            if (slot.removeListener(invalidationListener)) {
+            if (slot.removeListener(listener)) {
                 markInvalid = true;
             }
         }

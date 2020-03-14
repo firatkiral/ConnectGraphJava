@@ -6,7 +6,8 @@ import java.util.Objects;
 
 public class Observable {
     private boolean valid = true;
-    private final List<InvalidationListener> listenerList = new ArrayList<>();
+
+    private final List<Listener> listenerList = new ArrayList<>();
 
     public Observable() {
         this.invalidate();
@@ -20,7 +21,7 @@ public class Observable {
         this.valid = val;
     }
 
-    public final boolean addListener(InvalidationListener listener) {
+    public final boolean addListener(Listener listener) {
         Objects.requireNonNull(listener, "listener");
         if (!this.listenerList.contains(listener)) {
             this.listenerList.add(listener);
@@ -33,7 +34,7 @@ public class Observable {
         }
     }
 
-    public final boolean removeListener(InvalidationListener listener) {
+    public final boolean removeListener(Listener listener) {
         if (this.listenerList.remove(listener)) {
             return true;
         } else {
@@ -57,7 +58,7 @@ public class Observable {
         if (this.valid) {
             this.valid = false;
             onInvalidate();
-            listenerList.forEach(InvalidationListener::invoke);
+            listenerList.forEach(Listener::invoke);
             GraphManager.invokeStaticListeners();
         }
     }

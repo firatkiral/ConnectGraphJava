@@ -1,15 +1,28 @@
 package net.kiral.connectgraph;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Objects;
 
 //todo: need outgoing list to track of observers
-public class Slot<T> extends ObservableValue<T> {
+public class Slot<T> extends Observable {
 
     protected Slot<T> incoming;
-    protected InvalidationListener invalidationListener;
+    protected Listener listener;
+    private final List<ChangeListener<T>> listenerList = new ArrayList<>();
+
+    protected T cache;
+
+    public final T getCache() {
+        return this.cache;
+    }
+
+    public final void setCache(T value) {
+        this.cache = value;
+    }
 
     public Slot() {
-        this.invalidationListener = new InvalidationListener() {
+        this.listener = new Listener() {
             public void invoke() {
                 Slot.this.invalidate();
             }
@@ -31,7 +44,7 @@ public class Slot<T> extends ObservableValue<T> {
         if (incoming != this.incoming) {
             this.disconnect();
             this.incoming = incoming;
-            this.incoming.addListener(invalidationListener);
+            this.incoming.addListener(listener);
             invalidate();
         }
     }
@@ -43,7 +56,7 @@ public class Slot<T> extends ObservableValue<T> {
 
     public final void disconnect() {
         if (incoming != null) {
-            incoming.removeListener(invalidationListener);
+            incoming.removeListener(listener);
             incoming = null;
             //no need to invalidate, cache stays same
         }
@@ -71,6 +84,35 @@ public class Slot<T> extends ObservableValue<T> {
             this.onValidate();
         }
         return cache;
+    }
+
+    public final boolean addListener(ChangeListener<T> listener) {
+        Objects.requireNonNull(listener, "listener");
+        if (!this.listenerList.contains(listener)) {
+            this.listenerList.add(listener);
+            if (!this.isValid()) {
+                listener.invoke(this.cache, this.cache);
+            }
+            return true;
+        } else {
+            return false;
+        }
+    }
+
+    public final boolean removeListener(ChangeListener<T> listener) {
+        if (this.listenerList.remove(listener)) {
+            return true;
+        } else {
+            return false;
+        }
+    }
+
+    public final void invalidate( T oldValue) {
+        if (this.isValid()) {
+            this.onInvalidate();
+            this.invalidate();
+            listenerList.forEach(observerValue -> observerValue.invoke(get(), oldValue));
+        }
     }
 
     public final void dispose() {

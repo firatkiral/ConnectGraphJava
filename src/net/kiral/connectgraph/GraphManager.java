@@ -20,9 +20,9 @@ public class GraphManager {
     }
 
     //if we need a global tracker to get notified when any of observable in the app gets invalidated
-    private static final List<InvalidationListener> staticListenerList = new ArrayList<>();
+    private static final List<Listener> staticListenerList = new ArrayList<>();
 
-    public static boolean addStaticListener(InvalidationListener listener) {
+    public static boolean addStaticListener(Listener listener) {
         Objects.requireNonNull(listener, "listener");
         if (!staticListenerList.contains(listener)) {
             staticListenerList.add(listener);
@@ -32,7 +32,7 @@ public class GraphManager {
         }
     }
 
-    public static boolean removeStaticListener(InvalidationListener listener) {
+    public static boolean removeStaticListener(Listener listener) {
         return staticListenerList.remove(listener);
     }
 

@@ -20,8 +20,8 @@ class NodeTest {
         System.out.println(out);
 
         //Create our input values here
-        Vector3 v1 = new Vector3(1,1,1);
-        Vector3 v2 = new Vector3(2,2,2);
+        Vector3 v1 = new Vector3(1, 1, 1);
+        Vector3 v2 = new Vector3(2, 2, 2);
         float multiplier = 2;
 
         //and set these values
@@ -30,7 +30,7 @@ class NodeTest {
         //now our node is invalidated and it will calculate the output again when the next time get() method is called.
         //so we can set as many as inputs without doing unnecessary calculation.
         multiplyNode.secondSlot.set(v2);
-        multiplyNode.thirdSlot.set(multiplier);
+        multiplyNode.thirdSlot.set(new Float(multiplier));
 
         //Once we are done with setting inputs we can call get() method and it will calculate new output
         //it will print "output computed"
@@ -51,17 +51,16 @@ class NodeTest {
         /**
          * Creating node chain
          */
-        //Lets start creating another node calculates length of a vector
-        //This time we will use anonymous class instead.
         Node<Float> vectorLengthNode = new Node<Float>() {
-            public final Slot<Vector3> input = new Slot<>();
+            public final Slot<Vector3> input = new Slot<>(new Vector3());
             {
                 addSlot(input);
             }
+
             @Override
             public Float computeValue() {
                 Vector3 v = input.get();
-                float out = (float) Math.sqrt(v.x * v.x + v.y * v.y + v.z * v.z);
+                Float out = new Float((float) Math.sqrt(v.x * v.x + v.y * v.y + v.z * v.z));
                 System.out.println("vector length computed");
                 return out;
             }
@@ -80,7 +79,7 @@ class NodeTest {
 
         //So we set initial value to input property
         //Since it's anonymous class we can reach its properties by getProperty(int i) method
-        vectorLengthNode.getSlot(0).set(new Vector3(1,2,3));
+        vectorLengthNode.getSlot(0).set(new Vector3(1, 2, 3));
 
         //It will work this time, and calculate new output
         out = multiplyNode.get();

@@ -4,7 +4,9 @@ import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Objects;
-import java.util.concurrent.*;
+import java.util.concurrent.Callable;
+import java.util.concurrent.ExecutionException;
+import java.util.concurrent.Future;
 
 //todo: need outgoing list to track of observers
 public abstract class Node<T> extends Slot<T> implements Iterable<Slot> {
@@ -73,7 +75,7 @@ public abstract class Node<T> extends Slot<T> implements Iterable<Slot> {
         return cache;
     }
 
-    private Callable<T> task = this::computeValue;
+    private Callable<T> task = () -> computeValue();
 
     private Future<T> result = null;
 

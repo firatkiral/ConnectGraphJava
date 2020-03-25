@@ -7,6 +7,7 @@ import java.util.concurrent.Callable;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.Future;
+import java.util.function.Consumer;
 
 public class GraphManager {
     private static ExecutorService executor = Executors.newCachedThreadPool();
@@ -43,7 +44,12 @@ public class GraphManager {
     }
 
     protected static void invokeStaticListeners() {
-        staticListenerList.forEach(l->l.invoke());
+        staticListenerList.forEach(new Consumer<Listener>() {
+            @Override
+            public void accept(Listener l) {
+                l.invoke();
+            }
+        });
     }
 
     public static void terminateGraph() {

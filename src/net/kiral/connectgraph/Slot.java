@@ -13,14 +13,6 @@ public class Slot<T> extends Observable {
 
     protected T cache;
 
-    public final T getCache() {
-        return this.cache;
-    }
-
-    public final void setCache(T value) {
-        this.cache = value;
-    }
-
     public Slot() {
         this.listener = new Listener() {
             public void invoke() {
@@ -69,7 +61,10 @@ public class Slot<T> extends Observable {
     }
 
     public void set(T newValue) {
-        T old = cache;
+        T old = null;
+        if (cache != null) {
+            old = cache;
+        }
         this.cache = newValue;
         this.invalidate(old);
     }
@@ -107,7 +102,7 @@ public class Slot<T> extends Observable {
         }
     }
 
-    public final void invalidate( T oldValue) {
+    protected final void invalidate(T oldValue) {
         if (this.isValid()) {
             this.onInvalidate();
             this.invalidate();

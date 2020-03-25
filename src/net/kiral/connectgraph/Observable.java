@@ -48,13 +48,13 @@ public class Observable {
         }
     }
 
-    public final void validate() {
+    protected final void validate() {
         if (!this.valid) {
             this.valid = true;
         }
     }
 
-    public final void invalidate() {
+    protected final void invalidate() {
         if (this.valid) {
             this.valid = false;
             onInvalidate();
